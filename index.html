@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Introduction to Apache Kafka - The Next Gen Event Streaming System</title>
+
+    <meta name="author" content="James Ward">
+    <meta name="description" content="Apache Kafka has emerged as a next generation event streaming system to connect our distributed systems through fault tolerant and scalable event-driven architectures. Now open source through Apache, Kafka is being used by numerous large enterprises for a variety of use cases. This session will introduce the basics of Kafka and walk through some code examples that will show how to begin using it.">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+    <style>
+      .reveal section img {
+        border: 1px solid #222;
+      }
+    </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h2>Introduction to Apache Kafka</h2>
+          <h4>The Next Gen Event Streaming System</h4>
+
+          <p>
+            <small><a href="http://jamesward.com">James Ward</a> | <a href="http://twitter.com/_JamesWard">@_JamesWard</a></small>
+            <br/>
+            <small><em>Developer @ Salesforce.com</em></small>
+          </p>
+        </section>
+        <section>
+          <h2>Data Integration Today</h2>
+          <img src="assets/rats_nest.png" width="50%">
+        </section>
+        <section>
+          <h2>Welcome to Distributed Systems</h2>
+          <img src="assets/no_idea.gif" >
+        </section>
+        <section>
+          <h2>Integration Complexity</h2>
+
+          <table>
+            <tr>
+              <td width="50%">
+                <ul>
+                  <li class="fragment">No System of Record</li>
+                  <li class="fragment">Synchronization is hard</li>
+                  <li class="fragment">Scaling ETL is hard</li>
+                  <li class="fragment">Processing is error-prone</li>
+                </ul>
+              </td>
+              <td width="50%">
+                <ul>
+                  <li class="fragment">Events not Tables</li>
+                  <li class="fragment">Streams as Ledgers</li>
+                  <li class="fragment">First-class Partitioning</li>
+                  <li class="fragment">Processors with Pointers</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </section>
+        <section>
+          <h2>Really bad analogy time</h2>
+
+          <img src="assets/raid_5.png" class="fragment" width="50%">
+
+          <p>
+            <span class="fragment">Kafka = Event Stream</span>
+            <span class="fragment"> - Distributed</span>
+            <span class="fragment">&amp; Redundant</span>
+          </p>
+        </section>
+        <section>
+          <h2>Kafka Fundamentals</h2>
+
+          <img src="assets/kafka-diagram.png">
+
+          <p>
+            <ul>
+              <li class="fragment">Messaging System Semantics</li>
+              <li class="fragment">Clustering is Core</li>
+              <li class="fragment">Durability &amp; Ordering Guarantees</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Use Cases</h2>
+
+          <img src="assets/kafka-apis.png" width="40%">
+
+          <p>
+            <ul>
+              <li class="fragment">Modern ETL / CDC</li>
+              <li class="fragment">Data Pipelines</li>
+              <li class="fragment">Big Data Ingest</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Demo!</h2>
+
+          <img src="assets/pipeline.jpg">
+        </section>
+        <section>
+          <h2>Records</h2>
+
+          <img src="assets/append_only.png" width="50%">
+
+          <p>
+            <ul>
+              <li class="fragment">Name, Value, Timestamp</li>
+              <li class="fragment">Immutable</li>
+              <li class="fragment">Append Only</li>
+              <li class="fragment">Persisted</li>
+            </ul>
+          </p>
+
+          <p class="fragment">AKA: A Log</p>
+        </section>
+        <section>
+          <h2>Producers &amp; Consumers</h2>
+
+          <img src="assets/prod_cons.png">
+
+          <p>
+            <ul>
+              <li class="fragment">Broker = Node in the cluster</li>
+              <li class="fragment">Producer writes records to a broker</li>
+              <li class="fragment">Consumer reads records from a broker</li>
+              <li class="fragment">Leader / Follower for cluster distribution</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Topics &amp; Partitions</h2>
+
+          <img src="assets/log_anatomy.png">
+
+          <p>
+            <ul>
+              <li class="fragment">Topic = Logical name with 1 or more partitions</li>
+              <li class="fragment">Partitions are replicated</li>
+              <li class="fragment">Ordering is guaranteed for a partition</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Offsets</h2>
+
+          <img src="assets/offsets.png" width="50%">
+
+          <p>
+            <ul>
+              <li class="fragment">Unique sequential ID (per partition)</li>
+              <li class="fragment">Consumers track offsets</li>
+              <li class="fragment">Benefits: Replay, Different Speed Consumers, etc</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Producer Partitioning</h2>
+
+          <img src="assets/kafka_partitions.jpg" width="50%">
+
+          <p>
+            <ul>
+              <li class="fragment">Writes are to the leader of a partition</li>
+              <li class="fragment">Partitioning can be done manually or based on a key</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Consumer Groups</h2>
+
+          <img src="assets/consumer-groups.png">
+
+          <p>
+            <ul>
+              <li class="fragment">Logical name for 1 or more consumers</li>
+              <li class="fragment">Message consumption is load balanced across all consumers in a group</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Clients</h2>
+
+          <p>
+            <ul>
+              <li class="fragment">JVM is official</li>
+              <li class="fragment">Most other platforms via the community</li>
+              <li class="fragment">Polling Based</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Basic Connection</h2>
+
+          <p>
+            Producer
+            <pre><code>class Producer {
+    public void send(ProducerData&lt;K,V&gt; producerData);
+}</code></pre>
+          </p>
+          <p>
+            Consumer
+            <pre><code>class SimpleConsumer {
+    public ByteBufferMessageSet fetch(FetchRequest request);
+
+    public long[] getOffsetsBefore(String topic, int partition, long time, int maxNumOffsets);
+}
+
+interface ConsumerConnector {
+    public Map&lt;String,List&lt;KafkaStream&gt;&gt; createMessageStreams(Map&lt;String,Int&gt; topicCountMap);
+}</code></pre>
+        </section>
+        <section>
+          <h2>Delivery Guarantees</h2>
+
+          <p class="fragment">
+            Producer
+            <ul>
+              <li class="fragment">Async (No Guarantee)</li>
+              <li class="fragment">Committed to Leader</li>
+              <li class="fragment">Committed to Leader &amp; Quorum</li>
+            </ul>
+          </p>
+          <p class="fragment">
+            Consumer
+            <ul>
+              <li class="fragment">At-least-once (Default)</li>
+              <li class="fragment">At-most-once</li>
+              <li class="fragment">Effectively-once</li>
+              <li class="fragment">Exactly Once (Maybe)</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Cool Features</h2>
+
+          <p>
+            <ul>
+              <li class="fragment">Log Compaction</li>
+              <li class="fragment">Disk not Heap</li>
+              <li class="fragment">Pagecache to Socket</li>
+              <li class="fragment">Balanced Partitions &amp; Leaders</li>
+              <li class="fragment">Producer &amp; Consumer Quotas</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Akka Streams</h2>
+
+          <img src="assets/akka-streams.png">
+
+          <p>
+            <ul>
+              <li class="fragment">Impl of Reactive Streams</li>
+              <li class="fragment">Source / Sink Stream Programming</li>
+              <li class="fragment">Back-pressure, etc</li>
+              <li class="fragment">Kafka Adapter: <br/>https://github.com/akka/reactive-kafka</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Akka Streams</h2>
+
+          <pre><code>val source = Source.repeat("hello, world")
+val sink = Sink.foreach(println)
+val flow = source to sink
+flow.run()</code></pre>
+        </section>
+        <section>
+          <h2>Code!</h2>
+          <span style="font-size: 32px;">https://github.com/jamesward/koober</span>
+        </section>
+        <section>
+          <h2>Apache Flink</h2>
+          <h4>Real-time Data Analytics</h4>
+
+          <p>
+            <ul>
+              <li class="fragment">Bounded &amp; Unbounded Data Sets</li>
+              <li class="fragment">Stream processing (map, fold, filter, etc)</li>
+              <li class="fragment">Distributed Core</li>
+              <li class="fragment">Fault Tolerant</li>
+              <li class="fragment">Flexible Windowing</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Flink</h2>
+          <h4>Continuous Processing for Unbounded Datasets</h4>
+
+          <img src="assets/flink-processing.jpg">
+        </section>
+        <section>
+          <h2>Flink - Windowing</h2>
+
+          <p>Bounding with Time, Count, Session, or Data</p>
+
+          <img src="assets/flink-windowing.jpg">
+        </section>
+        <section>
+          <h2>Code!</h2>
+          <span style="font-size: 32px;">https://github.com/jamesward/koober</span>
+        </section>
+        <section>
+          <h2>Heroku Kafka</h2>
+
+          <p>https://www.heroku.com/kafka</p>
+          <img src="assets/kafka-diagram.png">
+        </section>
+        <section>
+          <h2>Questions?</h2>
+          <br/>
+          <p>
+            Reach out: <a href="http://twitter.com/_JamesWard">@_JamesWard</a>
+          </p>
+        </section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+        transition: 'none'
+			});
+		</script>
+	</body>
+</html>
