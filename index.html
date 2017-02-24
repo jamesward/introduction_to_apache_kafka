@@ -45,7 +45,7 @@
         </section>
         <section>
           <h2>Data Integration Today</h2>
-          <img src="assets/rats_nest.png" width="50%">
+          <img src="assets/rats_nest.png" width="50%" style="border: none; box-shadow: none;">
         </section>
         <section>
           <h2>Welcome to Distributed Systems</h2>
@@ -54,26 +54,40 @@
         <section>
           <h2>Integration Complexity</h2>
 
-          <table>
-            <tr>
-              <td width="50%">
-                <ul>
-                  <li class="fragment">No System of Record</li>
-                  <li class="fragment">Synchronization is hard</li>
-                  <li class="fragment">Scaling ETL is hard</li>
-                  <li class="fragment">Processing is error-prone</li>
-                </ul>
-              </td>
-              <td width="50%">
-                <ul>
-                  <li class="fragment">Events not Tables</li>
-                  <li class="fragment">Streams as Ledgers</li>
-                  <li class="fragment">First-class Partitioning</li>
-                  <li class="fragment">Processors with Pointers</li>
-                </ul>
-              </td>
-            </tr>
-          </table>
+          <p>
+            <ul>
+              <li class="fragment">No System of Record</li>
+              <li class="fragment">Synchronization is hard</li>
+              <li class="fragment">Scaling ETL is hard</li>
+              <li class="fragment">Processing is error-prone</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Events not Tables</h2>
+
+          <img src="assets/events.jpg" width="70%">
+        </section>
+        <section>
+          <h2>Streams as Ledgers</h2>
+
+          <img src="assets/replay.jpg" width="70%">
+        </section>
+        <section>
+          <h2>First-class Partitioning</h2>
+
+          <img src="assets/partitioning.jpg" width="70%">
+        </section>
+        <section>
+          <h2>Why not message systems?</h2>
+
+          <p>
+            <ul>
+              <li class="fragment">Ordering?</li>
+              <li class="fragment">Horizontal Scaling?</li>
+              <li class="fragment">Push?</li>
+            </ul>
+          </p>
         </section>
         <section>
           <h2>Really bad analogy time</h2>
@@ -81,10 +95,18 @@
           <img src="assets/raid_5.png" class="fragment" width="50%">
 
           <p>
-            <span class="fragment">Kafka = Event Stream</span>
+            <span class="fragment">Kafka = Event Ledger</span>
             <span class="fragment"> - Distributed</span>
             <span class="fragment">&amp; Redundant</span>
           </p>
+          <p class="fragment">A Distributed Commit Log</p>
+        </section>
+        <section>
+          <h2>Linear Clustering Performance</h2>
+
+          <img src="assets/performance.jpg" width="60%">
+
+          <p>Near network speeds</p>
         </section>
         <section>
           <h2>Kafka Fundamentals</h2>
@@ -124,7 +146,7 @@
 
           <p>
             <ul>
-              <li class="fragment">Name, Value, Timestamp</li>
+              <li class="fragment">Key, Value, Timestamp</li>
               <li class="fragment">Immutable</li>
               <li class="fragment">Append Only</li>
               <li class="fragment">Persisted</li>
@@ -182,6 +204,8 @@
             <ul>
               <li class="fragment">Writes are to the leader of a partition</li>
               <li class="fragment">Partitioning can be done manually or based on a key</li>
+              <li class="fragment">Replication Factor is Topic-based</li>
+              <li class="fragment">Auto-Rebalancing</li>
             </ul>
           </p>
         </section>
@@ -196,38 +220,6 @@
               <li class="fragment">Message consumption is load balanced across all consumers in a group</li>
             </ul>
           </p>
-        </section>
-        <section>
-          <h2>Clients</h2>
-
-          <p>
-            <ul>
-              <li class="fragment">JVM is official</li>
-              <li class="fragment">Most other platforms via the community</li>
-              <li class="fragment">Polling Based</li>
-            </ul>
-          </p>
-        </section>
-        <section>
-          <h2>Basic Connection</h2>
-
-          <p>
-            Producer
-            <pre><code>class Producer {
-    public void send(ProducerData&lt;K,V&gt; producerData);
-}</code></pre>
-          </p>
-          <p>
-            Consumer
-            <pre><code>class SimpleConsumer {
-    public ByteBufferMessageSet fetch(FetchRequest request);
-
-    public long[] getOffsetsBefore(String topic, int partition, long time, int maxNumOffsets);
-}
-
-interface ConsumerConnector {
-    public Map&lt;String,List&lt;KafkaStream&gt;&gt; createMessageStreams(Map&lt;String,Int&gt; topicCountMap);
-}</code></pre>
         </section>
         <section>
           <h2>Delivery Guarantees</h2>
@@ -262,6 +254,38 @@ interface ConsumerConnector {
               <li class="fragment">Producer &amp; Consumer Quotas</li>
             </ul>
           </p>
+        </section>
+        <section>
+          <h2>Clients</h2>
+
+          <p>
+            <ul>
+              <li class="fragment">JVM is official</li>
+              <li class="fragment">Most other platforms via the community</li>
+              <li class="fragment">Polling Based</li>
+            </ul>
+          </p>
+        </section>
+        <section>
+          <h2>Basic Connection</h2>
+
+          <p>
+            Producer
+            <pre><code>class Producer {
+    public void send(ProducerData&lt;K,V&gt; producerData);
+}</code></pre>
+          </p>
+          <p>
+            Consumer
+            <pre><code>class SimpleConsumer {
+    public ByteBufferMessageSet fetch(FetchRequest request);
+
+    public long[] getOffsetsBefore(String topic, int partition, long time, int maxNumOffsets);
+}
+
+interface ConsumerConnector {
+    public Map&lt;String,List&lt;KafkaStream&gt;&gt; createMessageStreams(Map&lt;String,Int&gt; topicCountMap);
+}</code></pre>
         </section>
         <section>
           <h2>Akka Streams</h2>
